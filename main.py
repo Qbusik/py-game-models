@@ -14,7 +14,7 @@ def main() -> None:
         bio = player.get("bio")
         race = player.get("race")
         guild = player.get("guild")
-        skills = player.get("race").get("skills")
+        skills = []
         player_guild = None
 
         if guild is not None:
@@ -23,12 +23,15 @@ def main() -> None:
                 description=guild.get("description")
             )
 
-        player_race, _ = Race.objects.get_or_create(
-            name=race.get("name"),
-            description=race.get("description")
-        )
+        player_race = None
+        if player.get("race"):
+            player_race, _ = Race.objects.get_or_create(
+                name=race.get("name"),
+                description=race.get("description")
+            )
+            skills = player.get("race").get("skills")
 
-        if len(skills) > 0:
+        if skills:
             for skill in skills:
                 Skill.objects.get_or_create(
                     name=skill.get("name"),
